@@ -32,6 +32,7 @@ namespace WebCloudSystem.Web
             var configurator = new AppConfigurator(services);
             configurator.ConfigureDependencyInjection();
             configurator.EstablishConnection(Configuration.GetConnectionString("DefaultConnection"));
+            configurator.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

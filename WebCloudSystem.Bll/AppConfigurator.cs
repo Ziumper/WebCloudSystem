@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WebCloudSystem.Dal;
@@ -15,7 +16,11 @@ namespace WebCloudSystem.Bll
         }
 
         public void ConfigureDependencyInjection() {
-            
+         
+        }
+
+        public void AddAutoMapper() {
+            this.services.AddAutoMapper(typeof(AppConfigurator).Assembly);
         }
 
         public void EstablishConnection(string connectionString) {
