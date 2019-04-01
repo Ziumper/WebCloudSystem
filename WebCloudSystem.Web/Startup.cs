@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebCloudSystem.Bll;
 
 namespace WebCloudSystem.Web
 {
@@ -27,6 +28,10 @@ namespace WebCloudSystem.Web
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            var configurator = new AppConfigurator(services);
+            configurator.ConfigureDependencyInjection();
+            configurator.EstablishConnection(Configuration.GetConnectionString("DefaultConnection"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
