@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebCloudSystem.Bll.Helpers;
 using WebCloudSystem.Bll;
 
 namespace WebCloudSystem.Web
@@ -31,8 +32,14 @@ namespace WebCloudSystem.Web
 
             var configurator = new AppConfigurator(services);
             configurator.ConfigureDependencyInjection();
-            configurator.EstablishConnection(Configuration.GetConnectionString("DefaultConnection"));
+            configurator.EstablishDatabaseConnection(Configuration.GetConnectionString("DefaultConnection"));
             configurator.AddAutoMapper();
+
+            var appSettingsSection  = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+            var appSettings  = appSettingsSection.Get<AppSettings>();
+
+            configurator.ConfigureJwtAuthentication(appSettings.Secret);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
