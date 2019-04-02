@@ -2,29 +2,32 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using WebCloudSystem.Bll.Services.Users;
 using WebCloudSystem.Dal;
+using WebCloudSystem.Dal.Repositories.Users;
 
 namespace WebCloudSystem.Bll
 {
   
     public class AppConfigurator 
     {
-        private IServiceCollection services;
+        private IServiceCollection _services;
 
         public AppConfigurator(IServiceCollection services) {
-            this.services = services;
+            _services = services;
         }
 
         public void ConfigureDependencyInjection() {
-         
+            _services.AddTransient<IUserService,UserService>();
+            _services.AddTransient<IUserRepository,UserRepository>();
         }
 
         public void AddAutoMapper() {
-            this.services.AddAutoMapper(typeof(AppConfigurator).Assembly);
+            _services.AddAutoMapper(typeof(AppConfigurator).Assembly);
         }
 
         public void EstablishConnection(string connectionString) {
-            services.AddDbContext<WebCloudSystemContext>(options => {
+            _services.AddDbContext<WebCloudSystemContext>(options => {
                 options.UseSqlServer(connectionString);
             });
         }
