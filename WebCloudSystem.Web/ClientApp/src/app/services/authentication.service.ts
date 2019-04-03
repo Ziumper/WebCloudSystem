@@ -10,6 +10,12 @@ export class AuthenticationService {
         this.apiUrl = 'api/users/authenticate';
      }
 
+    isLogged(): boolean {
+        if (localStorage.getItem('currentUser')) {
+            return true;
+        }
+    }
+
     login(username: string, password: string) {
         return this.http.post<any>(this.apiUrl, { username: username, password: password })
             .pipe(map(user => {
