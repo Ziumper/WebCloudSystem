@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FileModel } from '../models/file.model';
 import { HttpClient } from '@angular/common/http';
+import { FilePagedModel } from '../models/file-paged.model';
+import { FileQueryModel } from '../models/file-query.model';
 
 @Injectable()
 export class FileService {
@@ -24,8 +26,9 @@ export class FileService {
         return this.http.delete<FileModel>(this.fileApi + '/' + id);
     }
 
-    getFileListPaged(): Observable<Array<FileModel>> {
-        return this.http.get<Array<FileModel>>(this.fileApi);
+    getFileListPaged(filePagedQuery: FileQueryModel): Observable<FilePagedModel> {
+        const params = filePagedQuery.getParams();
+        return this.http.get<FilePagedModel>(this.fileApi,{params: params});
     }
 
     // downloadFile(id: number): Observable<FileModel> {

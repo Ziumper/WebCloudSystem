@@ -18,6 +18,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AlertComponent } from './directives/alert/alert.component';
 import { UploadFileComponent } from './components/uploadFile/uploadFile.component';
+import { FileService } from './services/file.service';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { UploadFileComponent } from './components/uploadFile/uploadFile.componen
     UserService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    FileService
   ],
   bootstrap: [AppComponent]
 })
