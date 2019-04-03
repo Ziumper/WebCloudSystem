@@ -20,6 +20,15 @@
                     </div>
                 </div>
                 <div class="form-group">
+                        <label for="username">E-mail</label>
+                        <input type="email" formControlName="email" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                            <div *ngIf="f.email.errors.required">E-mail is required</div>
+                            <div *ngIf="f.email.errors.email">Please provide valid email format</div>
+                        </div>
+                    </div>
+                <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" formControlName="username" class="form-control"
                         [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
@@ -34,6 +43,7 @@
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                         <div *ngIf="f.password.errors.required">Password is required</div>
                         <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                        <div *ngIf="f.password.errors.pattern">Password must have  lower case letters, upper case letters, numbers and special characters</div>
                     </div>
                 </div>
                 <div class="form-group">
