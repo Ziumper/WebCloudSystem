@@ -1,4 +1,4 @@
-namespace WebCloudSystem.Bll.Services.Base {
+namespace WebCloudSystem.Bll.Services.Utils {
     public interface IParserService
     {
         int ParseUserId(string userId);

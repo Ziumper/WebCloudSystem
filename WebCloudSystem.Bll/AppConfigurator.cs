@@ -10,6 +10,7 @@ using WebCloudSystem.Dal.Repositories.Users;
 using WebCloudSystem.Dal.Repositories.Files;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WebCloudSystem.Bll.Services.Utils;
 
 namespace WebCloudSystem.Bll
 {
@@ -29,6 +30,8 @@ namespace WebCloudSystem.Bll
             _services.AddTransient<IUserRepository, UserRepository>();
             _services.AddTransient<IFileRepository, FileRepository>();
             _services.AddTransient<IFileService, FileService>();
+            _services.AddTransient<IParserService,ParserService>();
+            _services.AddTransient<IHashService, HashService>();
         }
 
         public void AddAutoMapper()

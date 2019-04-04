@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using WebCloudSystem.Bll.Dto.Users;
 using WebCloudSystem.Bll.Services.Users;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace WebCloudSystem.Web.Controllers {
     
@@ -20,10 +21,10 @@ namespace WebCloudSystem.Web.Controllers {
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]UserDto userParam)
+        public async Task<IActionResult> Authenticate([FromBody]UserDto userParam)
         {
             var userId = this.User.FindFirst(ClaimTypes.Name)?.Value;
-            var user = _userService.Authenticate(userParam.Username, userParam.Password);
+            var user = await _userService.Authenticate(userParam.Username, userParam.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -36,6 +37,13 @@ namespace WebCloudSystem.Web.Controllers {
         {
             var users =  _userService.GetAll();
             return Ok(users);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]UserDto userParam) {
+            var user = await _userService.Register(userParam);
+            return Ok(user);
         }
     }
 }

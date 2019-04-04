@@ -13,11 +13,21 @@ namespace WebCloudSystem.Dal.Repositories.Base
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
 
-        protected DbSet<T> _table;
+        protected readonly DbSet<T> _table;
+        protected readonly WebCloudSystemContext _context;
 
         public BaseRepository(WebCloudSystemContext context)
         {
-            this._table = context.Set<T>();
+            _table = context.Set<T>();
+            _context = context;
+        }
+
+        public async Task<T> CreateAsync(T entity)
+        {
+            entity.CreationDate = DateTime.Now;
+            entity.ModificationDate = DateTime.Now;
+            var result = await _table.AddAsync(entity);
+            return result.Entity;
         }
 
         public async Task<PagedEntity<T>> GetAllPagedAsync(int page, int size, int filter, bool order, Expression<Func<T, bool>> predicate)
@@ -32,10 +42,21 @@ namespace WebCloudSystem.Dal.Repositories.Base
             return pagedEntity;
         }
 
+        public async Task<T> GetOneByAsync(Expression<Func<T, bool>> predicate)
+        {
+            var result = await _table.Where(predicate).SingleOrDefaultAsync();
+            return result;
+        }
+
         public async Task<T> GetOneByIdAsync(int id)
         {
             var result = await this._table.SingleAsync(entity => entity.Id == id);
             return result;
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
         }
 
         private int getSkipCount(int page,int size){

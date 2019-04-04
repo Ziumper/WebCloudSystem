@@ -8,6 +8,7 @@ using WebCloudSystem.Dal.Models;
 using AutoMapper;
 using WebCloudSystem.Bll.Exceptions;
 using System.Collections.Generic;
+using WebCloudSystem.Bll.Services.Utils;
 
 namespace WebCloudSystem.Bll.Services.Files {
 

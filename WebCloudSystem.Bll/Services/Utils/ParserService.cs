@@ -1,9 +1,11 @@
-namespace WebCloudSystem.Bll.Services.Base {
+using System;
+
+namespace WebCloudSystem.Bll.Services.Utils {
     public class ParserService : IParserService
     {
         public int ParseUserId(string userId)
         {
-            throw new System.NotImplementedException();
+            return Int32.Parse(userId);
         }
     }
 }

@@ -9,9 +9,10 @@ namespace WebCloudSystem.Dal.Repositories.Base {
     {
         Task<T> GetOneByIdAsync(int id);
         Task<PagedEntity<T>> GetAllPagedAsync(int page, int size, int filter, bool order, Expression<Func<T,bool>> predicate);
-            
+        Task<T> CreateAsync(T entity);    
+        Task SaveAsync();
           
-        
+        Task<T> GetOneByAsync(Expression<Func<T,bool>> predicate);
 
     }
 }
