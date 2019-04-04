@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebCloudSystem.Bll.Helpers;
 using WebCloudSystem.Bll;
+using WebCloudSystem.Bll.Middlewares;
 
 namespace WebCloudSystem.Web
 {
@@ -59,7 +60,7 @@ namespace WebCloudSystem.Web
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
+            app.UseMiddleware(typeof(ErrorHandlerMiddleware));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
