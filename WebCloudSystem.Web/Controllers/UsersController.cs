@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using WebCloudSystem.Bll.Dto.Users;
 using WebCloudSystem.Bll.Services.Users;
+using System.Security.Claims;
 
 namespace WebCloudSystem.Web.Controllers {
     
@@ -21,6 +22,7 @@ namespace WebCloudSystem.Web.Controllers {
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]UserDto userParam)
         {
+            var userId = this.User.FindFirst(ClaimTypes.Name)?.Value;
             var user = _userService.Authenticate(userParam.Username, userParam.Password);
 
             if (user == null)

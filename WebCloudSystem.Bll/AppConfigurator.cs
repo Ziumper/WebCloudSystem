@@ -3,9 +3,11 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WebCloudSystem.Bll.Services.Users;
+using WebCloudSystem.Bll.Services.Files;
 using WebCloudSystem.Dal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebCloudSystem.Dal.Repositories.Users;
+using WebCloudSystem.Dal.Repositories.Files;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -25,6 +27,8 @@ namespace WebCloudSystem.Bll
         {
             _services.AddTransient<IUserService, UserService>();
             _services.AddTransient<IUserRepository, UserRepository>();
+            _services.AddTransient<IFileRepository, FileRepository>();
+            _services.AddTransient<IFileService, FileService>();
         }
 
         public void AddAutoMapper()
