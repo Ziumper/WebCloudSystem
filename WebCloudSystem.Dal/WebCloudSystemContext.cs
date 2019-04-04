@@ -7,6 +7,7 @@ namespace WebCloudSystem.Dal
     public class WebCloudSystemContext : DbContext
     {
         public DbSet<User> Users {get;set;}
+        public DbSet<File> Files {get;set;}
         public WebCloudSystemContext(DbContextOptions<WebCloudSystemContext> options)
         : base(options)
         { 
