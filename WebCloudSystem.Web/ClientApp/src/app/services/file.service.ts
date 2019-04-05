@@ -15,7 +15,7 @@ export class FileService {
     private fileApi = 'api/files';
 
     saveFile(form: FormData): Observable<FileModel> {
-        return this.http.post<FileModel>(this.fileApi, form);
+        return this.http.post<FileModel>(this.fileApi + '/upload', form);
     }
 
     updateFile(form: FormData): Observable<FileModel> {
