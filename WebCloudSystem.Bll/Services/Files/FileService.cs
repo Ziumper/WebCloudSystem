@@ -26,6 +26,24 @@ namespace WebCloudSystem.Bll.Services.Files {
             _userRepository = userRepository;
             _fileWriter = fileWriter;
         }
+
+        public async Task<FileDto> GetFileByUser(int userId,int fileId)
+        {
+            var user = _userRepository.GetOneByIdAsync(userId);
+            if(user == null) {
+                throw new UserNotFoundException("User not found");
+            } 
+
+            var fileResult = await _fileRepository.GetOneByAsync(f => f.user.Id == user.Id && f.Id == fileId);
+            if(fileResult == null) {
+                throw new ResourceNotFoundException("File not found!");
+            }
+
+            var fileDto = _mapper.Map<File,FileDto>(fileResult);
+
+            return fileDto;
+        }
+
         public async Task<FileDtoPaged> GetFilesByUser(int userId,FileDtoPagedQuery fileQuery)
         {
             var myUser = await _userRepository.GetOneByIdAsync(userId);
@@ -39,6 +57,28 @@ namespace WebCloudSystem.Bll.Services.Files {
             var pagedResult = GetFilesPaged(pagedEntity,fileQuery);
 
             return pagedResult;
+        }
+
+        public async Task<FileDto> UpdateFile(int userId,FileDtoUpdate file)
+        {
+            var user = await  _userRepository.GetOneByIdAsync(userId);
+            if(user == null) {
+                throw new UserNotFoundException();
+            }
+
+            var fileId = file.FileId;
+            var fileResult = await _fileRepository.GetOneByAsync(f => f.user.Id == user.Id && f.Id == fileId);
+            if(fileResult == null) {
+                throw new ResourceNotFoundException("File not found!");
+            }
+
+            fileResult.FileName = file.Filename;
+            fileResult = _fileRepository.Update(fileResult);
+
+            await _fileRepository.SaveAsync();
+
+            var fileDto = _mapper.Map<File,FileDto>(fileResult);
+            return fileDto;
         }
 
         public async Task<FileDto> Upload(IFormFile file,int userId)

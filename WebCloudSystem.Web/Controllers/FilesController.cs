@@ -35,9 +35,18 @@ namespace WebCloudSystem.Web.Controllers{
             return Ok(result);
         }
 
-        [HttpGet]
-        public IActionResult GetTest(){
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetFile(int id){
+            var userId = GetUserIdFromClaim();
+            var result = await _fileService.GetFileByUser(userId,id);
             return Ok(new {message ="test"});
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody]FileDtoUpdate file) {
+            var userId = GetUserIdFromClaim();
+            var result = await _fileService.UpdateFile(userId,file);
+            return Ok(result);
         }
 
     }

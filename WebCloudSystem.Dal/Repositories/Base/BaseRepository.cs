@@ -59,10 +59,14 @@ namespace WebCloudSystem.Dal.Repositories.Base
             await _context.SaveChangesAsync();
         }
 
+        public T Update(T entity)
+        {
+            return _table.Update(entity).Entity;
+        }
+
         private int getSkipCount(int page,int size){
             var skipCount = (page - 1) * size;
             return skipCount;
-
         }
         
     }
