@@ -32,6 +32,7 @@ namespace WebCloudSystem.Bll
             _services.AddTransient<IFileService, FileService>();
             _services.AddTransient<IParserService,ParserService>();
             _services.AddTransient<IHashService, HashService>();
+            _services.AddTransient<IFileWriter,FileWriter>();
         }
 
         public void AddAutoMapper()

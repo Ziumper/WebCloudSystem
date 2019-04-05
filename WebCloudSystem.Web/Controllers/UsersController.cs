@@ -4,6 +4,7 @@ using WebCloudSystem.Bll.Dto.Users;
 using WebCloudSystem.Bll.Services.Users;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WebCloudSystem.Bll.Services.Utils;
 
 namespace WebCloudSystem.Web.Controllers {
     
@@ -14,7 +15,7 @@ namespace WebCloudSystem.Web.Controllers {
     {
         private IUserService _userService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService,IParserService parserService): base(parserService)
         {
             _userService = userService;
         }
@@ -23,7 +24,6 @@ namespace WebCloudSystem.Web.Controllers {
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]UserDto userParam)
         {
-            var userId = this.User.FindFirst(ClaimTypes.Name)?.Value;
             var user = await _userService.Authenticate(userParam.Username, userParam.Password);
 
             if (user == null)

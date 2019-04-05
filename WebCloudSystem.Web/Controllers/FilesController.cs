@@ -4,6 +4,8 @@ using WebCloudSystem.Bll.Services.Files;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WebCloudSystem.Bll.Dto.Files;
+using Microsoft.AspNetCore.Http;
+using WebCloudSystem.Bll.Services.Utils;
 
 namespace WebCloudSystem.Web.Controllers{
     
@@ -13,21 +15,24 @@ namespace WebCloudSystem.Web.Controllers{
     public class FilesController : ControllerBase {
         private readonly IFileService _fileService;
 
-        public FilesController(IFileService fileService) {
+        public FilesController(IFileService fileService,IParserService parserService): base(parserService) {
             _fileService = fileService;
         }
 
 
         [HttpGet("user")]
         public async Task<IActionResult> GetFilesByUser([FromQuery]FileDtoPagedQuery fileQuery) {
-            var userId = this.User.FindFirst(ClaimTypes.Name)?.Value;
+            var userId = GetUserIdFromClaim();
             var result = await _fileService.GetFilesByUser(userId,fileQuery);
 
-            if(result != null) {
-                return Ok(result);
-            }else {
-                return BadRequest(new {message = "No files found, upload some!"});
-            }
+            return Ok(result);
+        }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload(IFormFile file) {
+            var userId = GetUserIdFromClaim();
+            var result = await _fileService.Upload(file,userId);
+            return Ok(result);
         }
 
     }

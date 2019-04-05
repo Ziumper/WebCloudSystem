@@ -9,6 +9,7 @@ using AutoMapper;
 using WebCloudSystem.Bll.Exceptions;
 using System.Collections.Generic;
 using WebCloudSystem.Bll.Services.Utils;
+using Microsoft.AspNetCore.Http;
 
 namespace WebCloudSystem.Bll.Services.Files {
 
@@ -16,33 +17,60 @@ namespace WebCloudSystem.Bll.Services.Files {
     {
         private readonly IFileRepository _fileRepository;
         private readonly IMapper _mapper;
-        private readonly IParserService _parserService;
         private readonly IUserRepository _userRepository;
+        private readonly IFileWriter _fileWriter;
 
-        public FileService(IFileRepository fileRepository,IMapper mapper, IParserService parserService,IUserRepository userRepository) {
+        public FileService(IFileRepository fileRepository,IMapper mapper, IUserRepository userRepository,IFileWriter fileWriter) {
             _fileRepository = fileRepository;
             _mapper = mapper;
-            _parserService = parserService;
             _userRepository = userRepository;
+            _fileWriter = fileWriter;
         }
-        public async Task<FileDtoPaged> GetFilesByUser(string userId,FileDtoPagedQuery fileQuery)
+        public async Task<FileDtoPaged> GetFilesByUser(int userId,FileDtoPagedQuery fileQuery)
         {
-            var myUserId = _parserService.ParseUserId(userId);
-
-            var myUser = await _userRepository.GetOneByIdAsync(myUserId);
+            var myUser = await _userRepository.GetOneByIdAsync(userId);
 
             if(myUser == null) {
-                throw new UserNotFoundException("User for files owner not found");
+                throw new UserNotFoundException("Files owner not found");
             }
 
-            var pagedEntity = await _fileRepository.GetAllPagedAsync(fileQuery.Page,fileQuery.Size,fileQuery.Filter,fileQuery.Order,x => x.user.Id == myUserId);
+            var pagedEntity = await _fileRepository.GetAllPagedAsync(fileQuery.Page,fileQuery.Size,fileQuery.Filter,fileQuery.Order,x => x.user.Id == myUser.Id);
 
-            var pagedResult = getFilesPaged(pagedEntity,fileQuery);
+            var pagedResult = GetFilesPaged(pagedEntity,fileQuery);
 
             return pagedResult;
         }
 
-        private FileDtoPaged getFilesPaged(PagedEntity<File> pagedEntity,FileDtoPagedQuery fileQuery){
+        public async Task<FileDto> Upload(IFormFile file,int userId)
+        {
+            var user = await _userRepository.GetOneByIdAsync(userId);
+            if(user == null) {
+                throw new UserNotFoundException("User not found!");
+            }
+
+            var fileExtension = _fileWriter.GetFileExtension(file);
+            var fileNameOnServer =await  _fileWriter.SaveFileOnServer(file,userId);
+
+            var fileEntity = new File();
+            
+            fileEntity.FileName = file.FileName;
+            fileEntity.FileNameOnServer = fileNameOnServer;
+            fileEntity.Extension = fileExtension;
+            fileEntity.FileSize = file.Length;
+            fileEntity.user = user;
+
+            var result = await _fileRepository.CreateAsync(fileEntity);
+            
+            await _fileRepository.SaveAsync();
+
+            var fileDto = _mapper.Map<File,FileDto>(result);
+
+            return fileDto;
+        }
+
+
+
+        private FileDtoPaged GetFilesPaged(PagedEntity<File> pagedEntity,FileDtoPagedQuery fileQuery){
             var result = new FileDtoPaged();
             var entitiesDtoList = new List<FileDto>();
             var files = pagedEntity.Entities;
