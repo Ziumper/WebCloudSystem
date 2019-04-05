@@ -29,6 +29,7 @@ namespace WebCloudSystem.Bll.Middlewares {
 
             if (exception is ResourceNotFoundException) code = HttpStatusCode.NotFound;
             else if (exception is UnauthorizedException) code = HttpStatusCode.Unauthorized;
+            else if (exception is BadRequestException) code = HttpStatusCode.BadRequest;
 
             var result = JsonConvert.SerializeObject (new { message = exception.Message });
             context.Response.ContentType = "application/json";

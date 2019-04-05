@@ -32,13 +32,6 @@ namespace WebCloudSystem.Web.Controllers {
             return Ok(user);
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var users =  _userService.GetAll();
-            return Ok(users);
-        }
-
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]UserDto userParam) {

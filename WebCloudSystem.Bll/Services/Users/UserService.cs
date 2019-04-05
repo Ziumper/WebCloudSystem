@@ -14,16 +14,13 @@ using System.Security.Claims;
 using System.Linq;
 using System;
 using System.Threading.Tasks;
+using WebCloudSystem.Bll.Exceptions;
 
 namespace WebCloudSystem.Bll.Services.Users
 {
 
     public class UserService : BaseService, IUserService
     {
-        private List<User> _users = new List<User>
-        { 
-            new User { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" } 
-        };
         private readonly AppSettings _appSettings;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -58,28 +55,27 @@ namespace WebCloudSystem.Bll.Services.Users
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
 
             // remove password before returning
             var userWithoutPassword = _mapper.Map<User,UserDtoWithoutPassword>(user);
+            userWithoutPassword.Token = tokenHandler.WriteToken(token);
 
             return userWithoutPassword;
         }
 
-        public IEnumerable<UserDtoWithoutPassword> GetAll()
-        {
-            List<UserDtoWithoutPassword> usersWithoutPassword = new List<UserDtoWithoutPassword>();
-            foreach(var user in _users) {
-                var userDto = _mapper.Map<User,UserDtoWithoutPassword>(user);
-                usersWithoutPassword.Add(userDto);
-            }
-
-            return usersWithoutPassword;
-        }
-
         public async Task<UserDtoWithoutPassword> Register(UserDto userParam)
         {
+            if(IsUserWithThisUserNameIsInDatabase(userParam.Username)) {
+                throw new BadRequestException("There is a user with this username!");
+            }
+            if(IsUserWithThisUserNameIsInDatabase(userParam.Email)) {
+                throw new BadRequestException("There is a user with this email!");
+            }
+
             userParam.Password = _hashService.GetHash(userParam.Password);
+
+            
+
             var user = _mapper.Map<UserDto,User>(userParam);
             var userResult = await _userRepository.CreateAsync(user);
             
@@ -88,6 +84,24 @@ namespace WebCloudSystem.Bll.Services.Users
             var userWithoutPassword = _mapper.Map<User,UserDtoWithoutPassword>(userResult);
 
             return userWithoutPassword;
+        }
+
+        private Boolean IsUserWithThisUserNameIsInDatabase(string username) {
+            var user = _userRepository.GetOneByAsync(x=>x.Username == username);
+            if(user != null) {
+                return true;
+            }
+
+            return true;
+        }
+
+        private Boolean IsUserWithThisEmailIsInDatabase(string email) {
+            var user = _userRepository.GetOneByAsync(x=>x.Email == email);
+            if(user != null) {
+                return true;
+            }
+
+            return true;
         }
     }
 }

@@ -7,7 +7,6 @@ namespace WebCloudSystem.Bll.Services.Users {
     public interface IUserService : IBaseService
     {
         Task<UserDtoWithoutPassword> Authenticate(string username, string password);
-        IEnumerable<UserDtoWithoutPassword> GetAll();
         Task<UserDtoWithoutPassword> Register(UserDto userParam);
     }
 }
