@@ -1,1 +1,16 @@
-<h1>Upload File</h1>
+<h1>Upload Form</h1>
+<form #uploadForm="ngForm" name="upload-form" (ngSubmit)="submit()">
+<div class="form-group">
+    <input (change)="handleFileUpload($event.target.files)"  type="file" name="file" id="file" #myInput class="inputfile" />
+    <label [hidden]="isUploaded" class="btn btn-primary" for="file">Choose a file</label>
+    <div [hidden]="!isUploaded"  class="main-file-container">
+        <h3>File ready to upload:</h3>
+        <p>File name: {{fileToUpload?.name}} </p>
+        <p>File type: {{fileToUpload?.type}}</p>
+        <p>File size: {{fileToUpload?.size | filesize}}</p>
+        <span (click)="deleteFile()" class="btn btn-primary">Delete</span>
+    </div>
+                       
+</div>
+<button class="btn btn-primary" [disabled]="!isUploaded" type="submit">Upload</button>
+</form>

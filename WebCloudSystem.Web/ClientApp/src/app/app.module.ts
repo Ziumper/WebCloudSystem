@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AlertService } from './services/alert.service';
@@ -19,7 +19,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { AlertComponent } from './directives/alert/alert.component';
 import { UploadFileComponent } from './components/uploadFile/uploadFile.component';
 import { FileService } from './services/file.service';
-
+import {FileSizeModule} from 'ngx-filesize';
 
 @NgModule({
   declarations: [
@@ -37,6 +37,8 @@ import { FileService } from './services/file.service';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
+    FileSizeModule,
     routing
   ],
   providers: [
