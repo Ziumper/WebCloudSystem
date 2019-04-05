@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FileService } from 'src/app/services/file.service';
 import { first } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-upload-file',
@@ -15,10 +14,10 @@ export class UploadFileComponent implements OnInit {
     @ViewChild('myInput')
     myInputVariable: ElementRef;
 
-    constructor(private fileService: FileService, private alertService: AlertService, private router: Router) { }
+    constructor(private fileService: FileService, private alertService: AlertService) { }
 
     ngOnInit(): void {
-        this.isUploaded = false;
+        this.reset();
     }
 
     public submit(): void {
@@ -32,6 +31,7 @@ export class UploadFileComponent implements OnInit {
             error => {
                 this.alertService.error(error);
         });
+        this.reset();
     }
 
     public handleFileUpload(files: FileList): void {
@@ -40,7 +40,12 @@ export class UploadFileComponent implements OnInit {
     }
 
     public deleteFile(): void {
+       this.reset();
+    }
+
+    private reset(): void {
         this.isUploaded = false;
         this.myInputVariable.nativeElement.value = '';
+        this.fileToUpload = undefined;
     }
  }
