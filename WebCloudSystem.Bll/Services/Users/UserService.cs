@@ -87,7 +87,7 @@ namespace WebCloudSystem.Bll.Services.Users
         }
 
         private Boolean IsUserWithThisUserNameIsInDatabase(string username) {
-            var user = _userRepository.GetOneByAsync(x=>x.Username == username);
+            var user = _userRepository.GetOneByAsync(x=>x.Username == username.ToLower());
             if(user != null) {
                 return true;
             }
@@ -96,7 +96,7 @@ namespace WebCloudSystem.Bll.Services.Users
         }
 
         private Boolean IsUserWithThisEmailIsInDatabase(string email) {
-            var user = _userRepository.GetOneByAsync(x=>x.Email == email);
+            var user = _userRepository.GetOneByAsync(x=>x.Email == email.ToLower());
             if(user != null) {
                 return true;
             }
