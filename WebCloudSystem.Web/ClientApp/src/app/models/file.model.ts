@@ -1,6 +1,7 @@
 export class FileModel {
     id: number;
-    filename: string;
+    fileName: string;
+    fileSize: number;
     creationDate: Date;
     modificationDate: Date;
 }

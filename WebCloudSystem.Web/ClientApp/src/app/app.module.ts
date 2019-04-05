@@ -20,6 +20,8 @@ import { AlertComponent } from './directives/alert/alert.component';
 import { UploadFileComponent } from './components/uploadFile/uploadFile.component';
 import { FileService } from './services/file.service';
 import {FileSizeModule} from 'ngx-filesize';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import {FileSizeModule} from 'ngx-filesize';
     ReactiveFormsModule,
     FormsModule,
     FileSizeModule,
+    AngularFontAwesomeModule,
+    NgbModule,
     routing
   ],
   providers: [

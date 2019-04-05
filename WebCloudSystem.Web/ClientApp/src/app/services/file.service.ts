@@ -28,7 +28,7 @@ export class FileService {
 
     getFileListPaged(filePagedQuery: FileQueryModel): Observable<FilePagedModel> {
         const params = filePagedQuery.getParams();
-        return this.http.get<FilePagedModel>(this.fileApi,{params: params});
+        return this.http.get<FilePagedModel>(this.fileApi + '/user', {params: params});
     }
 
     // downloadFile(id: number): Observable<FileModel> {

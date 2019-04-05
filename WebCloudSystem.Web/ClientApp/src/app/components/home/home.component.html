@@ -2,45 +2,36 @@
 <table class="table post-list-table">
   <thead>
       <tr>
-          <th class="post-manager-table-head" (click)="sort(0)" scope="col">
-              <!-- <fa [hidden]="!postQueryModel.order || postQueryModel.filter != 0" name="arrow-up"></fa>
-              <fa [hidden]="postQueryModel.order || postQueryModel.filter != 0" name="arrow-down"></fa> -->
+          <th  scope="col">
               <span>Id</span></th>
-          <th class="post-manager-table-head" (click)="sort(3)" scope="col">
-              <!-- <fa [hidden]="!postQueryModel.order || postQueryModel.filter != 3" name="arrow-up"></fa>
-              <fa [hidden]="postQueryModel.order || postQueryModel.filter != 3" name="arrow-down"></fa> -->
+          <th scope="col">
               <span>Name</span>
           </th>
-          <th class="post-manager-table-head" (click)="sort(1)" scope="col">
-              <!-- <fa [hidden]="!postQueryModel.order || postQueryModel.filter != 1" name="arrow-up"></fa>
-              <fa [hidden]="postQueryModel.order || postQueryModel.filter != 1" name="arrow-down"></fa> -->
+          <th scope="col">
+            <span>File size</span>
+        </th>
+          <th scope="col">
               <span>Creation Date</span></th>
-          <th class="post-manager-table-head" (click)="sort(2)" scope="col">
-              <!-- <fa [hidden]="!postQueryModel.order || postQueryModel.filter != 2" name="arrow-up"></fa>
-              <fa [hidden]="postQueryModel.order || postQueryModel.filter != 2" name="arrow-down"></fa> -->
+          <th scope="col">
               <span>Modification Date</span>
-              </th>
+          </th>
           <th scope="col">Actions</th>
       </tr>
   </thead>
       <tbody>
-          <tr>
-              <!-- <th>{{post.id}}</th>
-              <td>{{post.title}}</td>
-              <td>{{post.creationDate | date:'medium'}}</td>
-              <td>{{post.modificationDate | date:'medium'}}</td>
-              <td>
-                  <ng-template #tipEditContent>Edit</ng-template>
-                  <a class="action-icon" [routerLink]="['/blog/',blogId,'post-editor',post.id]" [ngbTooltip]="tipEditContent"><fa name="edit"></fa></a>
-                  <ng-template #tipViewContent>Go to post</ng-template>
-                  <a class="action-icon" [routerLink]="['/blog/',blogId,'post', post.id]"  [ngbTooltip]="tipViewContent"><fa name="eye"></fa></a>
-                  <ng-template #tipDeleteContent>Delete</ng-template>
-                  <fa  class="action-icon" (click)="deletePost(post.id)" [ngbTooltip]="tipDeleteContent" name="trash"></fa>
-                  <ng-template #tipPublishContent>Publish</ng-template>
-                  <fa class="action-icon" (click)="publishPost()" [ngbTooltip]="tipPublishContent" name="bullhorn"></fa>
-              </td> -->
+          <tr *ngFor="let file of files">
+             <td>{{file.id}}</td>
+             <td>{{file.fileName}}</td>
+             <td>{{file.fileSize | filesize}}</td>
+             <td>{{file.creationDate | date:'medium'}}</td>
+             <td>{{file.modificationDate | date:'medium'}}</td>
+             <td>
+                <button ngbTooltip="Edit file" class="btn btn-primary action-button" ><fa name="edit"></fa></button>
+                <button ngbTooltip="Download file" class="btn btn-success action-button" ><fa name="download"></fa></button>
+                <button ngbTooltip="Delete file" class="btn btn-danger action-button" ><fa name="trash"></fa> </button>
+             </td>
           </tr>
       </tbody>
   </table>
-  <!-- <ngb-pagination (pageChange)="onPageChange($event)" class="d-flex justify-content-center" *ngIf="posts.length > 0"
-          [collectionSize]="collectionSize"  [pageSize]="pageSize" [(page)]="this.page" aria-label="Default pagination"></ngb-pagination> -->
+  <ngb-pagination (pageChange)="onPageChange($event)" class="d-flex justify-content-center" *ngIf="files.length > 0"
+          [collectionSize]="this.filePagedModel.count"  [pageSize]="this.filePagedModel.size" [(page)]="this.filePagedModel.page" aria-label="Default pagination"></ngb-pagination>
