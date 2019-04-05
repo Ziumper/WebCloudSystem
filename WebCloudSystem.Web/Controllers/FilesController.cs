@@ -35,5 +35,10 @@ namespace WebCloudSystem.Web.Controllers{
             return Ok(result);
         }
 
+        [HttpGet]
+        public IActionResult GetTest(){
+            return Ok(new {message ="test"});
+        }
+
     }
 }

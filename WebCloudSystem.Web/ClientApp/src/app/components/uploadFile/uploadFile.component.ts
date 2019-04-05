@@ -23,7 +23,7 @@ export class UploadFileComponent implements OnInit {
     public submit(): void {
         const formData = new FormData();
         formData.append('file', this.fileToUpload);
-        this.fileService.updateFile(formData).pipe(first())
+        this.fileService.saveFile(formData).pipe(first())
         .subscribe(
             data => {
                 this.alertService.success('Upload successfull!', false);
