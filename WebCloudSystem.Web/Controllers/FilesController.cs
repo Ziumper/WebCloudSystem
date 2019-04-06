@@ -39,13 +39,20 @@ namespace WebCloudSystem.Web.Controllers{
         public async Task<IActionResult> GetFile(int id){
             var userId = GetUserIdFromClaim();
             var result = await _fileService.GetFileByUser(userId,id);
-            return Ok(new {message ="test"});
+            return Ok(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody]FileDtoUpdate file) {
             var userId = GetUserIdFromClaim();
             var result = await _fileService.UpdateFile(userId,file);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id){
+            var userId = GetUserIdFromClaim();
+            var result = await _fileService.DeleteAsync(userId,id);
             return Ok(result);
         }
 

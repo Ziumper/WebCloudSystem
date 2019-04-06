@@ -5,6 +5,8 @@ import { FilePagedModel } from 'src/app/models/file-paged.model';
 import { first } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
 import { FileModel } from 'src/app/models/file.model';
+import { Router } from '@angular/router';
+import { routerNgProbeToken } from '@angular/router/src/router_module';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +20,7 @@ export class HomeComponent implements OnInit {
   files: Array<FileModel>;
 
 
-  constructor(private fileService: FileService, private alertService: AlertService) {
+  constructor(private fileService: FileService, private alertService: AlertService, private route: Router) {
     this.fileQuery = new FileQueryModel(1, 10, 1, true, '');
     this.files = new Array<FileModel>();
   }
@@ -33,6 +35,10 @@ export class HomeComponent implements OnInit {
     this.getFiles();
   }
 
+  public editFile(fileId: number) {
+    this.route.navigate([`edit/${fileId}`]);
+  }
+
   public getFiles(): void {
     this.fileService.getFileListPaged(this.fileQuery)
       .subscribe(
@@ -43,5 +49,15 @@ export class HomeComponent implements OnInit {
         error => {
           this.alertService.error(error);
         });
+  }
+
+  public deleteFile(id: number): void {
+    this.fileService.deleteFile(id).subscribe(data => {
+      this.alertService.success('Succesfuly deleted file');
+      this.getFiles();
+    }, error => {
+      this.alertService.error(error);
+      this.getFiles();
+    });
   }
 }

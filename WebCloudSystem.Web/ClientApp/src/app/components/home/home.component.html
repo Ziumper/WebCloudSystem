@@ -26,9 +26,9 @@
              <td>{{file.creationDate | date:'medium'}}</td>
              <td>{{file.modificationDate | date:'medium'}}</td>
              <td>
-                <button ngbTooltip="Edit file" class="btn btn-primary action-button" ><fa name="edit"></fa></button>
+                <button ngbTooltip="Edit file" class="btn btn-primary action-button" (click)="editFile(file.id)" ><fa name="edit"></fa></button>
                 <button ngbTooltip="Download file" class="btn btn-success action-button" ><fa name="download"></fa></button>
-                <button ngbTooltip="Delete file" class="btn btn-danger action-button" ><fa name="trash"></fa> </button>
+                <button ngbTooltip="Delete file" class="btn btn-danger action-button" (click)="deleteFile(file.id)" ><fa name="trash"></fa> </button>
              </td>
           </tr>
       </tbody>

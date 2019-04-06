@@ -7,6 +7,7 @@ namespace WebCloudSystem.Bll.Services.Files
     {
         Task<string> SaveFileOnServer(IFormFile file,int userId);
         string GetFileExtension(IFormFile file);
+        string GetFileNameWithoutExtension(IFormFile file);
         bool DeleteFileFromServer(string fileName,int userId);
 
     }

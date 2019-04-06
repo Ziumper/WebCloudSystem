@@ -1,0 +1,7 @@
+<form #fileForm="ngForm" name="updateFile" (ngSubmit)="submit(model)">
+    <div class="form-group">
+        <label for="fileName">File name</label>
+        <input type="text" class="form-control" name="fileName" [(ngModel)]="model.fileName" #fileName="ngModel"  required/>
+    </div>
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>

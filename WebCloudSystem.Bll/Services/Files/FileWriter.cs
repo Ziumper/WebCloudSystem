@@ -25,13 +25,19 @@ namespace WebCloudSystem.Bll.Services.Files
             return extension;
         }
 
+        public string GetFileNameWithoutExtension(IFormFile file)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(file.FileName);
+            return fileName;
+        }
+
         public async Task<string> SaveFileOnServer(IFormFile file,int userId)
         {
             CheckIsFolderExistIfNotCreateIt("uploads");
             string fileName;
            
             var extension = GetFileExtension(file);
-            fileName = Guid.NewGuid().ToString() + extension; //Create a new Name for the file due to security reasons.
+            fileName = Guid.NewGuid().ToString(); //Create a new Name for the file due to security reasons.
             
             var uploadFolderPath = "uploads\\"+userId;
             CheckIsFolderExistIfNotCreateIt(uploadFolderPath);

@@ -18,8 +18,8 @@ export class FileService {
         return this.http.post<FileModel>(this.fileApi + '/upload', form);
     }
 
-    updateFile(form: FormData): Observable<FileModel> {
-        return this.http.put<FileModel>(this.fileApi, form);
+    updateFile(fileModel: FileModel): Observable<FileModel> {
+        return this.http.put<FileModel>(this.fileApi, fileModel);
     }
 
     deleteFile(id: number): Observable<FileModel> {
@@ -29,6 +29,10 @@ export class FileService {
     getFileListPaged(filePagedQuery: FileQueryModel): Observable<FilePagedModel> {
         const params = filePagedQuery.getParams();
         return this.http.get<FilePagedModel>(this.fileApi + '/user', {params: params});
+    }
+
+    getFileById(fileId: number): Observable<FileModel> {
+        return this.http.get<FileModel>(this.fileApi + '/' + fileId);
     }
 
     // downloadFile(id: number): Observable<FileModel> {

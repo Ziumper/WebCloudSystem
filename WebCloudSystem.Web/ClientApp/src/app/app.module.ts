@@ -22,6 +22,7 @@ import { FileService } from './services/file.service';
 import {FileSizeModule} from 'ngx-filesize';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {  EditFileComponent } from './components/editFile/editFile.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     LoginComponent,
     RegisterComponent,
     AlertComponent,
-    UploadFileComponent
+    UploadFileComponent,
+    EditFileComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

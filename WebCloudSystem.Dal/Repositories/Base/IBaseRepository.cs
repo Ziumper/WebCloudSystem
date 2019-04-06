@@ -13,6 +13,7 @@ namespace WebCloudSystem.Dal.Repositories.Base {
         Task SaveAsync();
         Task<T> GetOneByAsync(Expression<Func<T,bool>> predicate);
         T Update(T entity);
+        T Delete(T entity);
 
     }
 }

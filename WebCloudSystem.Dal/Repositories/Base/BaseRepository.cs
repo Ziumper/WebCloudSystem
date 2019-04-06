@@ -30,6 +30,11 @@ namespace WebCloudSystem.Dal.Repositories.Base
             return result.Entity;
         }
 
+        public T Delete(T entity)
+        {
+            return _table.Remove(entity).Entity;
+        }
+
         public async Task<PagedEntity<T>> GetAllPagedAsync(int page, int size, int filter, bool order, Expression<Func<T, bool>> predicate)
         {
             var pagedEntity = new PagedEntity<T>();
@@ -61,6 +66,7 @@ namespace WebCloudSystem.Dal.Repositories.Base
 
         public T Update(T entity)
         {
+            entity.ModificationDate = DateTime.Now;
             return _table.Update(entity).Entity;
         }
 

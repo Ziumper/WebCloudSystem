@@ -2,7 +2,7 @@ namespace WebCloudSystem.Bll.Dto.Files
 {
     public class FileDtoUpdate
     {
-        public int FileId {get; set;}
-        public string Filename {get; set;}
+        public int Id {get; set;}
+        public string FileName {get; set;}
     }
 }

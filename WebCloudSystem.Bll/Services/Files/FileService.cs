@@ -27,9 +27,30 @@ namespace WebCloudSystem.Bll.Services.Files {
             _fileWriter = fileWriter;
         }
 
+        public async Task<FileDto> DeleteAsync(int userId, int id)
+        {
+            var user = await _userRepository.GetOneByIdAsync(userId);
+            if(user == null) {
+                throw new UserNotFoundException("User not found");
+            }
+            var file = await _fileRepository.GetOneByAsync(f => f.Id == id && f.user.Id == userId);
+            if(file == null) {
+                throw new ResourceNotFoundException("File to delete not found");
+            }
+
+            _fileWriter.DeleteFileFromServer(file.FileNameOnServer,userId);
+            var result =_fileRepository.Delete(file);
+
+            await _fileRepository.SaveAsync();
+
+            var resultDto = _mapper.Map<File,FileDto>(result);
+
+            return resultDto;
+        }
+
         public async Task<FileDto> GetFileByUser(int userId,int fileId)
         {
-            var user = _userRepository.GetOneByIdAsync(userId);
+            var user = await _userRepository.GetOneByIdAsync(userId);
             if(user == null) {
                 throw new UserNotFoundException("User not found");
             } 
@@ -66,13 +87,14 @@ namespace WebCloudSystem.Bll.Services.Files {
                 throw new UserNotFoundException();
             }
 
-            var fileId = file.FileId;
+            var fileId = file.Id;
             var fileResult = await _fileRepository.GetOneByAsync(f => f.user.Id == user.Id && f.Id == fileId);
             if(fileResult == null) {
                 throw new ResourceNotFoundException("File not found!");
             }
 
-            fileResult.FileName = file.Filename;
+            fileResult.FileName = file.FileName;
+
             fileResult = _fileRepository.Update(fileResult);
 
             await _fileRepository.SaveAsync();
@@ -93,7 +115,7 @@ namespace WebCloudSystem.Bll.Services.Files {
 
             var fileEntity = new File();
             
-            fileEntity.FileName = file.FileName;
+            fileEntity.FileName = _fileWriter.GetFileNameWithoutExtension(file);
             fileEntity.FileNameOnServer = fileNameOnServer;
             fileEntity.Extension = fileExtension;
             fileEntity.FileSize = file.Length;

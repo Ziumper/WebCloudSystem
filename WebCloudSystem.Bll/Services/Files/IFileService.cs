@@ -10,5 +10,6 @@ namespace WebCloudSystem.Bll.Services.Files {
         Task<FileDto> Upload(IFormFile file,int userId);
         Task<FileDto> GetFileByUser(int userId, int fileId);
         Task<FileDto> UpdateFile(int userId,FileDtoUpdate file);
+        Task<FileDto> DeleteAsync(int userId, int id);
     }
 }
