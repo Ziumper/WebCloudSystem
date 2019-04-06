@@ -40,7 +40,7 @@ namespace WebCloudSystem.Web.Controllers {
         }
 
         [AllowAnonymous]
-        [HttpPut]
+        [HttpPut("activation")]
         public async Task<IActionResult> Activate([FromBody] UserDtoActivation activationUserDetails){
             await _userService.ActivateUser(activationUserDetails);
             return Ok();

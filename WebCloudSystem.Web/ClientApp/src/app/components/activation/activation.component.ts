@@ -13,7 +13,7 @@ import { ActivationModel } from 'src/app/models/activation.model';
 export class ActivationComponent implements OnInit {
     loading = false;
     submitted = false;
-    registerForm: FormGroup;
+    activationForm: FormGroup;
     private activationModel: ActivationModel;
     private userId: number;
 
@@ -29,25 +29,25 @@ export class ActivationComponent implements OnInit {
 
     ngOnInit(): void {
         this.userId = this.activatedRoute.snapshot.params['id'];
-        this.registerForm = this.formBuilder.group({
+        this.activationForm = this.formBuilder.group({
             code: ['', [Validators.required, Validators.minLength(4)]],
         });
     }
 
     // convenience getter for easy access to form fields
-    get f() { return this.registerForm.controls; }
+    get f() { return this.activationForm.controls; }
 
 
     public onSubmit() {
         this.submitted = true;
 
         // stop here if form is invalid
-        if (this.registerForm.invalid) {
+        if (this.activationForm.invalid) {
             return;
         }
 
         this.loading = true;
-        const acitviationCode = this.registerForm.get('code').value;
+        const acitviationCode = this.activationForm.get('code').value;
         this.activationModel.code = acitviationCode;
         this.activationModel.id = this.userId;
         this.userService.activate(this.activationModel)
