@@ -19,12 +19,18 @@ namespace WebCloudSystem.Bll.Services.Files {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly IFileWriter _fileWriter;
+        private readonly IFileReader _fileReader;
 
-        public FileService(IFileRepository fileRepository,IMapper mapper, IUserRepository userRepository,IFileWriter fileWriter) {
+        public FileService(IFileRepository fileRepository,
+        IMapper mapper, 
+        IUserRepository userRepository,
+        IFileWriter fileWriter,
+        IFileReader fileReader) {
             _fileRepository = fileRepository;
             _mapper = mapper;
             _userRepository = userRepository;
             _fileWriter = fileWriter;
+            _fileReader = fileReader;
         }
 
         public async Task<FileDto> DeleteAsync(int userId, int id)
@@ -46,6 +52,22 @@ namespace WebCloudSystem.Bll.Services.Files {
             var resultDto = _mapper.Map<File,FileDto>(result);
 
             return resultDto;
+        }
+
+        public async Task<FileDtoDownload> Download(int userId, int id)
+        {
+            var user = await _userRepository.GetOneByIdAsync(userId);
+            if(user == null) {
+                throw new UserNotFoundException();
+            }
+            
+            var file = await _fileRepository.GetOneByAsync(f => f.Id == id && f.user.Id == userId);
+            if(file == null) {
+                throw new ResourceNotFoundException("File not found");
+            }
+
+            var result = _fileReader.ReadFromServer(userId,file.FileNameOnServer,file.FileName,file.Extension);
+            return result;
         }
 
         public async Task<FileDto> GetFileByUser(int userId,int fileId)

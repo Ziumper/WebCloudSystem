@@ -56,5 +56,11 @@ namespace WebCloudSystem.Web.Controllers{
             return Ok(result);
         }
 
+        [HttpGet("download/{id:int}")]
+        public async Task<IActionResult> Download(int id) {
+            var userId = GetUserIdFromClaim();
+            FileDtoDownload result = await _fileService.Download(userId,id);
+            return File(result.FileBytes,result.ContentType,result.FileName);
+        }
     }
 }

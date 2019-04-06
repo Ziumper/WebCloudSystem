@@ -7,6 +7,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { FileModel } from 'src/app/models/file.model';
 import { Router } from '@angular/router';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -59,5 +60,26 @@ export class HomeComponent implements OnInit {
       this.alertService.error(error);
       this.getFiles();
     });
+  }
+
+  public downloadFile(id: number): void {
+    this.fileService.downloadFile(id).subscribe(
+      (data: HttpResponse<any>) => {
+      this.makeDownload(data);
+      this.alertService.success('File is downloading.');
+    }, error => {
+      this.alertService.error(error);
+    });
+  }
+
+  private makeDownload(data: HttpResponse<any>) {
+    const contentDispositionHeader = data.headers.get('Content-Disposition');
+    const result = contentDispositionHeader.split(';')[1].trim().split('=')[1];
+    const blob = new Blob([data.body], { type: 'application/force-download' });
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.download = result;
+    anchor.href = url;
+    anchor.click();
   }
 }

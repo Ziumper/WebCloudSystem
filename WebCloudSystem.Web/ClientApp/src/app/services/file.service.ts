@@ -9,6 +9,7 @@ import { FileQueryModel } from '../models/file-query.model';
 @Injectable()
 export class FileService {
 
+
     constructor(private http: HttpClient) {
     }
 
@@ -35,7 +36,7 @@ export class FileService {
         return this.http.get<FileModel>(this.fileApi + '/' + fileId);
     }
 
-    // downloadFile(id: number): Observable<FileModel> {
-    //     return this.http.get<FileModel>(this.fileApi + '/' + id);
-    // }
+    downloadFile(id: number): Observable<any> {
+        return this.http.get<any>(this.fileApi + '/download/' + id, {responseType: 'blob' as 'json', observe: 'response' as 'body'});
+    }
 }
