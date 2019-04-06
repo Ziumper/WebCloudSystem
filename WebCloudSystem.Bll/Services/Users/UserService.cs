@@ -15,6 +15,9 @@ using System.Linq;
 using System;
 using System.Threading.Tasks;
 using WebCloudSystem.Bll.Exceptions;
+using WebCloudSystem.Bll.Services.Emails;
+using WebCloudSystem.Bll.Services.Emails.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace WebCloudSystem.Bll.Services.Users
 {
@@ -25,12 +28,21 @@ namespace WebCloudSystem.Bll.Services.Users
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IHashService _hashService;
+        private readonly IEmailService _emailService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IOptions<AppSettings> appSettings,IUserRepository userRepository,IMapper mapper,IHashService hashService) {
+        public UserService(
+        IOptions<AppSettings> appSettings,
+        IUserRepository userRepository,IMapper mapper,
+        IHashService hashService,
+        IEmailService emailService,
+        IHttpContextAccessor httpContextAccesor) {
             _appSettings = appSettings.Value;
             _userRepository = userRepository;
             _mapper = mapper;
             _hashService = hashService;
+            _emailService = emailService;
+            _httpContextAccessor = httpContextAccesor;
         }
 
         public async Task<UserDtoWithoutPassword> Authenticate(string username, string password)
@@ -73,13 +85,19 @@ namespace WebCloudSystem.Bll.Services.Users
             }
 
             userParam.Password = _hashService.GetHash(userParam.Password);
-
-            
-
             var user = _mapper.Map<UserDto,User>(userParam);
+            user.Username = user.Username.ToLower();
+            user.Email = user.Email.ToLower();
+            user.IsActive = false;
+            user.ActivationCode = _hashService.GetRandomActivationCode();
+
             var userResult = await _userRepository.CreateAsync(user);
             
             await _userRepository.SaveAsync();
+
+            var emailMesssage = GetRegisterEmailMessage(userResult);
+
+            _emailService.Send(emailMesssage);
 
             var userWithoutPassword = _mapper.Map<User,UserDtoWithoutPassword>(userResult);
 
@@ -102,6 +120,62 @@ namespace WebCloudSystem.Bll.Services.Users
             }
 
             return true;
+        }
+
+        private EmailMessage GetRegisterEmailMessage(User user) {
+            EmailMessage emailMesssage = new EmailMessage();
+            emailMesssage.FromAddresses = new List<EmailAddress>();
+            emailMesssage.ToAddresses = new List<EmailAddress>();
+
+            EmailAddress emailAddres = new EmailAddress();
+            emailAddres.Address = "webcloudsystem@email.com";
+            emailAddres.Name = "WebCloudSytem bot";
+            emailMesssage.FromAddresses.Add(emailAddres);
+
+            EmailAddress userEmailAddres = new EmailAddress();
+            emailAddres.Name = user.FirstName + " " + user.LastName;
+            emailAddres.Address = user.Email;
+            emailMesssage.ToAddresses.Add(userEmailAddres);
+
+            emailMesssage.Subject = "Activation code Web Cloud System";
+
+            var host =  $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}";
+
+            emailMesssage.Content = "Please go to " + host + "/activation?&id="+ user.Id +"&code=" + user.ActivationCode + 
+            " and a activate your account<br/> Here is your activation code: <b>" + user.ActivationCode + "</b>";
+            
+            return emailMesssage;
+        }
+
+        public async Task<UserDtoWithoutPassword> ActivateUser(int userId, string activationCode)
+        {
+            var user = await _userRepository.GetOneByAsync(u => u.Id == userId);
+            if(user == null) {
+                throw new UserNotFoundException("Activation user not found!");
+            }
+
+            if(user.ActivationCode != activationCode) {
+                throw new BadRequestException("Wrong activation code!");
+            }
+
+            user.IsActive = true;
+
+            var resultUser =_userRepository.Update(user);
+            await _userRepository.SaveAsync();
+
+            var userWithoutPassword = _mapper.Map<User,UserDtoWithoutPassword>(resultUser);
+
+            return userWithoutPassword;
+        }
+
+        public async Task ResendActivationCode(string userEmail)
+        {
+            var user = await _userRepository.GetOneByAsync(u => u.Email == userEmail.ToLower());
+            if(user == null) {
+                throw new UserNotFoundException("User with that email not found");
+            }
+            var emailMessage = GetRegisterEmailMessage(user);
+            _emailService.Send(emailMessage);
         }
     }
 }

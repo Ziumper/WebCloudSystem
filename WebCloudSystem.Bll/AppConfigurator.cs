@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebCloudSystem.Bll.Services.Utils;
 using WebCloudSystem.Bll.Services.Emails;
+using Microsoft.AspNetCore.Http;
 
 namespace WebCloudSystem.Bll
 {
@@ -35,6 +36,8 @@ namespace WebCloudSystem.Bll
             _services.AddTransient<IHashService, HashService>();
             _services.AddTransient<IFileWriter,FileWriter>();
             _services.AddTransient<IFileReader,FileReader>();
+            
+            _services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
         }
         
         public void AddEmailDependencyInjection(EmailConfiguration emailConfiguration) {
