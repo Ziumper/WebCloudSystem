@@ -1,0 +1,17 @@
+<div class="activation-form-container col-sm-6">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Activation</h5>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="code">Activation code</label>
+                    <input type="text" formControlName="code" class="form-control"  />
+                </div>
+                <div class="form-group">
+                    <button [disabled]="loading" class="btn btn-primary">Activate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</div>

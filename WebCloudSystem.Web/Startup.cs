@@ -39,6 +39,7 @@ namespace WebCloudSystem.Web
 
             var appSettingsSection  = Configuration.GetSection("AppSettings");
             var configurationEmailObj = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            configurator.AddEmailDependencyInjection(configurationEmailObj);
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings  = appSettingsSection.Get<AppSettings>();
 

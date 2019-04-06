@@ -23,6 +23,7 @@ import {FileSizeModule} from 'ngx-filesize';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {  EditFileComponent } from './components/editFile/editFile.component';
+import { ActivationComponent } from './components/activation/activation.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {  EditFileComponent } from './components/editFile/editFile.component';
     AlertComponent,
     UploadFileComponent,
     EditFileComponent,
+    ActivationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

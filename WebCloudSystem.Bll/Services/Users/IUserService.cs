@@ -8,7 +8,7 @@ namespace WebCloudSystem.Bll.Services.Users {
     {
         Task<UserDtoWithoutPassword> Authenticate(string username, string password);
         Task<UserDtoWithoutPassword> Register(UserDto userParam);
-        Task<UserDtoWithoutPassword> ActivateUser(int userId,string activationCode);
+        Task<UserDtoWithoutPassword> ActivateUser(UserDtoActivation activationUserDetails);
         Task ResendActivationCode(string useremail);
     }
 }

@@ -38,5 +38,12 @@ namespace WebCloudSystem.Web.Controllers {
             var user = await _userService.Register(userParam);
             return Ok(user);
         }
+
+        [AllowAnonymous]
+        [HttpPut]
+        public async Task<IActionResult> Activate([FromBody] UserDtoActivation activationUserDetails){
+            await _userService.ActivateUser(activationUserDetails);
+            return Ok();
+        }
     }
 }
