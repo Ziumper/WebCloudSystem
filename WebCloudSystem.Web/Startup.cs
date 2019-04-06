@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WebCloudSystem.Bll.Helpers;
 using WebCloudSystem.Bll;
 using WebCloudSystem.Bll.Middlewares;
+using WebCloudSystem.Bll.Services.Emails;
 
 namespace WebCloudSystem.Web
 {
@@ -37,6 +38,7 @@ namespace WebCloudSystem.Web
             configurator.AddAutoMapper();
 
             var appSettingsSection  = Configuration.GetSection("AppSettings");
+            var configurationEmailObj = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings  = appSettingsSection.Get<AppSettings>();
 

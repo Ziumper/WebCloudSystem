@@ -11,6 +11,7 @@ using WebCloudSystem.Dal.Repositories.Files;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebCloudSystem.Bll.Services.Utils;
+using WebCloudSystem.Bll.Services.Emails;
 
 namespace WebCloudSystem.Bll
 {
@@ -34,6 +35,11 @@ namespace WebCloudSystem.Bll
             _services.AddTransient<IHashService, HashService>();
             _services.AddTransient<IFileWriter,FileWriter>();
             _services.AddTransient<IFileReader,FileReader>();
+        }
+        
+        public void AddEmailDependencyInjection(EmailConfiguration emailConfiguration) {
+            _services.AddSingleton<IEmailConfiguration>(emailConfiguration);
+            _services.AddTransient<IEmailService,EmailService>();
         }
 
         public void AddAutoMapper()
