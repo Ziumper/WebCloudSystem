@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-                    this.alertService.success('Registration successful', true);
+                    this.alertService.success('Registration successful, check your mail box for activation code', true);
                     this.router.navigate(['/login']);
                 },
                 error => {

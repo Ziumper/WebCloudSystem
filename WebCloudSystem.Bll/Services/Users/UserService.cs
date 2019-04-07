@@ -88,17 +88,14 @@ namespace WebCloudSystem.Bll.Services.Users {
             user.Email = user.Email.ToLower ();
             user.IsActive = false;
             user.ActivationCode = _hashService.GetRandomActivationCode ();
-            var emailMesssage = GetRegisterEmailMessage (user);
-               try{
-                _emailService.Send (emailMesssage);
-            } catch (Exception ex) {
-                user.IsActive = true;
-            }
-
+           
             var userResult = await _userRepository.CreateAsync (user);
 
             await _userRepository.SaveAsync ();
 
+            var emailMesssage = GetRegisterEmailMessage(userResult);
+            _emailService.Send(emailMesssage);
+          
             var userWithoutPassword = _mapper.Map<User, UserDtoWithoutPassword> (userResult);
 
             return userWithoutPassword;
