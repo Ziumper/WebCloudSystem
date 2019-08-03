@@ -8,7 +8,7 @@ namespace WebCloudsystem.Dal {
         public WebCloudSystemContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<WebCloudSystemContext>();
-            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=WebCloudSystem;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Data Source=webcloudsystemweb20190407011119dbserver.database.windows.net;Initial Catalog=WebCloudsystemWeb20190407011119_db;User ID=webcloudsystem;Password=MistrzWebu102;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
             return new WebCloudSystemContext(optionsBuilder.Options);
         }
